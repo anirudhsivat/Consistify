@@ -30,8 +30,8 @@ export default function App() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <header className="flex items-center justify-between mb-12">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
-              Tracker<span className="text-indigo-600 dark:text-indigo-400">AI</span>
+            <h1 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white uppercase tracking-wider drop-shadow-sm">
+              Consist<span className="text-indigo-600 dark:text-indigo-400">ify</span>
             </h1>
             <p className="text-zinc-500 dark:text-zinc-400 mt-1">Smart habit tracking & productivity coach.</p>
           </div>
