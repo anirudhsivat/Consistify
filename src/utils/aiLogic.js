@@ -140,15 +140,26 @@ export function getWeeklySmartReport(habits, currentDate = new Date()) {
 export function getGoalBreakdown(goal) {
   const lowercaseGoal = goal.toLowerCase();
   
-  if (lowercaseGoal.match(/fitness|weight|health|gym|workout|muscle|fat/)) {
+  // 1. Diet & Nutrition
+  if (lowercaseGoal.match(/vegetarian|vegan|diet|eat|food|nutrition|meal/)) {
     return [
-      { name: "30 min targeted workout", category: "Physical" },
-      { name: "Drink 2L water", category: "Physical" },
-      { name: "Log daily meals", category: "Other" }
+      { name: "Eat at least 1 plant-based meal", category: "Physical" },
+      { name: "Try a new healthy recipe", category: "Learning" },
+      { name: "Log daily food intake", category: "Other" }
     ];
   }
   
-  if (lowercaseGoal.match(/code|placement|job|software|developer|interview|tech/)) {
+  // 2. Fitness & Health
+  if (lowercaseGoal.match(/fitness|weight|health|gym|workout|muscle|fat|run|exercise/)) {
+    return [
+      { name: "30 min targeted workout", category: "Physical" },
+      { name: "Stretch for 10 minutes", category: "Physical" },
+      { name: "Drink 2L water", category: "Physical" }
+    ];
+  }
+  
+  // 3. Coding & Tech
+  if (lowercaseGoal.match(/code|placement|job|software|developer|interview|tech|programming/)) {
     return [
       { name: "Solve 2 DSA problems", category: "Deep Work" },
       { name: "Work on portfolio project (45m)", category: "Deep Work" },
@@ -156,35 +167,57 @@ export function getGoalBreakdown(goal) {
     ];
   }
 
-  if (lowercaseGoal.match(/read|book|literature/)) {
+  // 4. Reading & Literature
+  if (lowercaseGoal.match(/read|book|literature|novel/)) {
     return [
       { name: "Read 20 pages", category: "Learning" },
-      { name: "Summarize what I read", category: "Deep Work" },
+      { name: "Write 200 words", category: "Deep Work" },
       { name: "Read instead of scrolling (15m)", category: "Other" }
     ];
   }
   
-  if (lowercaseGoal.match(/learn|study|exam|school|college/)) {
+  // 5. General Learning & Study
+  if (lowercaseGoal.match(/learn|study|exam|school|college|skill|language/)) {
     return [
       { name: "Review notes for 30 mins", category: "Learning" },
       { name: "Undistracted study session (1 hr)", category: "Deep Work" },
       { name: "Test myself with flashcards", category: "Learning" }
     ];
   }
+  
+  // 6. Mindfulness & Mental Health
+  if (lowercaseGoal.match(/meditate|mindfulness|stress|sleep|journal|mental/)) {
+    return [
+      { name: "10 min guided meditation", category: "Other" },
+      { name: "Write in journal for 5 mins", category: "Deep Work" },
+      { name: "No screens 1hr before bed", category: "Physical" }
+    ];
+  }
+
+  // 7. Finance & Money
+  if (lowercaseGoal.match(/money|save|budget|finance|invest|wealth/)) {
+    return [
+      { name: "Track daily expenses", category: "Other" },
+      { name: "Read about investing (15m)", category: "Learning" },
+      { name: "Avoid impulse purchases today", category: "Other" }
+    ];
+  }
 
   // Dynamic fallback: Extract the core subject from the goal by removing filler words
-  const fillerWords = ['i', 'want', 'to', 'how', 'can', 'become', 'a', 'an', 'the', 'my', 'get', 'better', 'at', 'achieve', 'make', 'start'];
+  const fillerWords = ['i', 'want', 'to', 'how', 'can', 'become', 'a', 'an', 'the', 'my', 'get', 'better', 'at', 'achieve', 'make', 'start', 'be'];
   let coreGoal = goal.split(' ')
     .filter(word => !fillerWords.includes(word.toLowerCase()))
     .join(' ')
     .trim();
     
-  if (!coreGoal) coreGoal = goal; // fallback if it becomes empty
+  if (!coreGoal || coreGoal.length < 3) coreGoal = goal; // fallback if it becomes empty
+
+  coreGoal = coreGoal.charAt(0).toUpperCase() + coreGoal.slice(1);
 
   // Dynamic suggestions incorporating their exact goal
   return [
-    { name: `Research / Learn about ${coreGoal} (20m)`, category: "Learning" },
-    { name: `Deep focus session on ${coreGoal} (45m)`, category: "Deep Work" },
-    { name: `Review daily progress for ${coreGoal}`, category: "Other" }
+    { name: `Practice ${coreGoal} for 30 mins`, category: "Deep Work" },
+    { name: `Watch a tutorial on ${coreGoal}`, category: "Learning" },
+    { name: `Plan tomorrow's step for ${coreGoal}`, category: "Other" }
   ];
 }
