@@ -7,7 +7,7 @@ import GoalBreakdown from './components/GoalBreakdown';
 import { Moon, Sun } from 'lucide-react';
 
 export default function App() {
-  const { habits, moods, addHabit, deleteHabit, toggleHabit, addMood, simulatedDate, advanceDay } = useHabits();
+  const { habits, moods, addHabit, deleteHabit, toggleHabit, addMood, simulatedDate, advanceDay, resetData } = useHabits();
   const [darkMode, setDarkMode] = useState(false);
 
   // Initialize dark mode from system preference or local storage
@@ -36,6 +36,12 @@ export default function App() {
             <p className="text-zinc-500 dark:text-zinc-400 mt-1">Smart habit tracking & productivity coach.</p>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={resetData}
+              className="px-4 py-2 bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 rounded-full font-medium hover:bg-red-100 dark:hover:bg-red-800/50 transition-colors text-sm flex items-center gap-2"
+            >
+              Reset Data 🔄
+            </button>
             <button
               onClick={advanceDay}
               className="px-4 py-2 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 rounded-full font-medium hover:bg-indigo-200 dark:hover:bg-indigo-800/60 transition-colors text-sm flex items-center gap-2"

@@ -125,5 +125,14 @@ export function useHabits() {
     }
   };
 
-  return { habits, moods, addHabit, deleteHabit, toggleHabit, addMood, simulatedDate, advanceDay };
+  const resetData = () => {
+    setHabits([]);
+    setMoods([]);
+    setSimulatedDate(new Date());
+    localStorage.removeItem('ai-habit-tracker-habits');
+    localStorage.removeItem('ai-habit-tracker-moods');
+    localStorage.removeItem('ai-habit-tracker-date');
+  };
+
+  return { habits, moods, addHabit, deleteHabit, toggleHabit, addMood, simulatedDate, advanceDay, resetData };
 }
