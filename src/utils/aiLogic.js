@@ -140,34 +140,51 @@ export function getWeeklySmartReport(habits, currentDate = new Date()) {
 export function getGoalBreakdown(goal) {
   const lowercaseGoal = goal.toLowerCase();
   
-  if (lowercaseGoal.includes("fitness") || lowercaseGoal.includes("weight") || lowercaseGoal.includes("health")) {
+  if (lowercaseGoal.match(/fitness|weight|health|gym|workout|muscle|fat/)) {
     return [
-      { name: "30 min workout", category: "Physical" },
+      { name: "30 min targeted workout", category: "Physical" },
       { name: "Drink 2L water", category: "Physical" },
-      { name: "Eat a healthy meal", category: "Other" }
+      { name: "Log daily meals", category: "Other" }
     ];
   }
   
-  if (lowercaseGoal.includes("code") || lowercaseGoal.includes("placement") || lowercaseGoal.includes("job")) {
+  if (lowercaseGoal.match(/code|placement|job|software|developer|interview|tech/)) {
     return [
-      { name: "Study DSA for 1 hour", category: "Deep Work" },
-      { name: "Practice 2 LeetCode problems", category: "Deep Work" },
-      { name: "Revise CS concepts", category: "Learning" }
+      { name: "Solve 2 DSA problems", category: "Deep Work" },
+      { name: "Work on portfolio project (45m)", category: "Deep Work" },
+      { name: "Read 1 technical article", category: "Learning" }
     ];
   }
 
-  if (lowercaseGoal.includes("learn") || lowercaseGoal.includes("study")) {
+  if (lowercaseGoal.match(/read|book|literature/)) {
     return [
-      { name: "Read for 30 mins", category: "Learning" },
-      { name: "Take notes on new topic", category: "Deep Work" },
-      { name: "Review flashcards", category: "Learning" }
+      { name: "Read 20 pages", category: "Learning" },
+      { name: "Summarize what I read", category: "Deep Work" },
+      { name: "Read instead of scrolling (15m)", category: "Other" }
+    ];
+  }
+  
+  if (lowercaseGoal.match(/learn|study|exam|school|college/)) {
+    return [
+      { name: "Review notes for 30 mins", category: "Learning" },
+      { name: "Undistracted study session (1 hr)", category: "Deep Work" },
+      { name: "Test myself with flashcards", category: "Learning" }
     ];
   }
 
-  // Generic fallback
+  // Dynamic fallback: Extract the core subject from the goal by removing filler words
+  const fillerWords = ['i', 'want', 'to', 'how', 'can', 'become', 'a', 'an', 'the', 'my', 'get', 'better', 'at', 'achieve', 'make', 'start'];
+  let coreGoal = goal.split(' ')
+    .filter(word => !fillerWords.includes(word.toLowerCase()))
+    .join(' ')
+    .trim();
+    
+  if (!coreGoal) coreGoal = goal; // fallback if it becomes empty
+
+  // Dynamic suggestions incorporating their exact goal
   return [
-    { name: "Review daily goals", category: "Other" },
-    { name: "Work on primary task (1 hr)", category: "Deep Work" },
-    { name: "Reflect on progress", category: "Other" }
+    { name: `Research / Learn about ${coreGoal} (20m)`, category: "Learning" },
+    { name: `Deep focus session on ${coreGoal} (45m)`, category: "Deep Work" },
+    { name: `Review daily progress for ${coreGoal}`, category: "Other" }
   ];
 }
