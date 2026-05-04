@@ -3,8 +3,8 @@ import { format } from 'date-fns';
 import { Trash2, Flame, AlertCircle, Sparkles } from 'lucide-react';
 import { getHabitFailurePrediction } from '../utils/aiLogic';
 
-export default function HabitItem({ habit, toggleHabit, deleteHabit }) {
-  const todayStr = format(new Date(), 'yyyy-MM-dd');
+export default function HabitItem({ habit, toggleHabit, deleteHabit, simulatedDate }) {
+  const todayStr = format(simulatedDate || new Date(), 'yyyy-MM-dd');
   const isCompletedToday = habit.history.includes(todayStr);
   const failurePrediction = getHabitFailurePrediction(habit);
 

@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react';
-import { format, differenceInDays, parseISO, startOfDay, subDays } from 'date-fns';
+import { format, differenceInDays, parseISO, startOfDay, subDays, addDays } from 'date-fns';
 
 export function useHabits() {
+  const [simulatedDate, setSimulatedDate] = useState(() => {
+    const saved = localStorage.getItem('ai-habit-tracker-date');
+    return saved ? new Date(saved) : new Date();
+  });
+
   const [habits, setHabits] = useState(() => {
     const saved = localStorage.getItem('ai-habit-tracker-habits');
     if (saved) {
-      // Recalculate streaks on load just in case days have passed
       const parsed = JSON.parse(saved);
-      return parsed.map(h => ({...h, streakCount: calculateStreak(h.history)}));
+      // We pass the initial simulatedDate to calculate streaks correctly on load
+      const initialDate = localStorage.getItem('ai-habit-tracker-date') ? new Date(localStorage.getItem('ai-habit-tracker-date')) : new Date();
+      return parsed.map(h => ({...h, streakCount: calculateStreak(h.history, initialDate)}));
     }
     return [];
   });
@@ -25,12 +31,29 @@ export function useHabits() {
     localStorage.setItem('ai-habit-tracker-moods', JSON.stringify(moods));
   }, [moods]);
 
+  useEffect(() => {
+    localStorage.setItem('ai-habit-tracker-date', simulatedDate.toISOString());
+  }, [simulatedDate]);
+
+  function advanceDay() {
+    const nextDay = addDays(simulatedDate, 1);
+    setSimulatedDate(nextDay);
+    
+    // Recalculate streaks for all habits because a day passing might break them
+    setHabits(prevHabits => 
+      prevHabits.map(h => ({
+        ...h,
+        streakCount: calculateStreak(h.history, nextDay)
+      }))
+    );
+  }
+
   // history is an array of 'yyyy-MM-dd' strings
-  function calculateStreak(history) {
+  function calculateStreak(history, targetDate) {
     if (!history || history.length === 0) return 0;
     
     const sortedDates = [...history].sort((a, b) => new Date(b) - new Date(a));
-    const today = startOfDay(new Date());
+    const today = startOfDay(targetDate);
     const yesterday = subDays(today, 1);
     
     let firstDate = startOfDay(parseISO(sortedDates[0]));
@@ -60,7 +83,7 @@ export function useHabits() {
       id: crypto.randomUUID(),
       name,
       category,
-      createdDate: format(new Date(), 'yyyy-MM-dd'),
+      createdDate: format(simulatedDate, 'yyyy-MM-dd'),
       history: [],
       streakCount: 0
     };
@@ -82,7 +105,7 @@ export function useHabits() {
         return {
           ...habit,
           history: newHistory,
-          streakCount: calculateStreak(newHistory)
+          streakCount: calculateStreak(newHistory, simulatedDate)
         };
       }
       return habit;
@@ -90,7 +113,7 @@ export function useHabits() {
   };
 
   const addMood = (moodStr) => {
-    const todayStr = format(new Date(), 'yyyy-MM-dd');
+    const todayStr = format(simulatedDate, 'yyyy-MM-dd');
     const existingIndex = moods.findIndex(m => m.date === todayStr);
     
     if (existingIndex >= 0) {
@@ -102,5 +125,5 @@ export function useHabits() {
     }
   };
 
-  return { habits, moods, addHabit, deleteHabit, toggleHabit, addMood };
+  return { habits, moods, addHabit, deleteHabit, toggleHabit, addMood, simulatedDate, advanceDay };
 }

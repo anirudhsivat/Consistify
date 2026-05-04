@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { calculateConsistencyScore, getBehaviorAnalysis, getHabitTypeIntelligence, getWeeklySmartReport } from '../utils/aiLogic';
 import { Activity, Brain, Calendar, TrendingUp, SmilePlus } from 'lucide-react';
 
-export default function Dashboard({ habits, moods, addMood }) {
-  const consistencyScore = calculateConsistencyScore(habits);
+export default function Dashboard({ habits, moods, addMood, simulatedDate }) {
+  const consistencyScore = calculateConsistencyScore(habits, simulatedDate);
   const behaviorAnalysis = getBehaviorAnalysis(habits);
   const habitTypeIntel = getHabitTypeIntelligence(habits);
-  const weeklyReport = getWeeklySmartReport(habits);
+  const weeklyReport = getWeeklySmartReport(habits, simulatedDate);
 
   const [selectedMood, setSelectedMood] = useState(null);
 

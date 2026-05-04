@@ -1,10 +1,10 @@
 import { format, subDays, parseISO, getDay, differenceInDays } from 'date-fns';
 
-export function calculateConsistencyScore(habits) {
+export function calculateConsistencyScore(habits, currentDate = new Date()) {
   if (habits.length === 0) return 0;
   
   let totalScore = 0;
-  const today = new Date();
+  const today = currentDate;
 
   habits.forEach(habit => {
     const createdDate = parseISO(habit.createdDate);
@@ -103,10 +103,10 @@ export function getHabitTypeIntelligence(habits) {
   return `Insight: You are neglecting your ${minCategory} habits. Try focusing on them today!`;
 }
 
-export function getWeeklySmartReport(habits) {
+export function getWeeklySmartReport(habits, currentDate = new Date()) {
   if (habits.length === 0) return null;
 
-  const today = new Date();
+  const today = currentDate;
   const last7Days = Array.from({length: 7}).map((_, i) => format(subDays(today, i), 'yyyy-MM-dd'));
   
   let totalCompleted = 0;

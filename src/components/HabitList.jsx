@@ -2,7 +2,7 @@ import React from 'react';
 import HabitItem from './HabitItem';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function HabitList({ habits, toggleHabit, deleteHabit }) {
+export default function HabitList({ habits, toggleHabit, deleteHabit, simulatedDate }) {
   if (habits.length === 0) {
     return (
       <div className="text-center py-12 px-4 rounded-2xl bg-white dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 shadow-sm">
@@ -26,6 +26,7 @@ export default function HabitList({ habits, toggleHabit, deleteHabit }) {
               habit={habit}
               toggleHabit={toggleHabit}
               deleteHabit={deleteHabit}
+              simulatedDate={simulatedDate}
             />
           </motion.div>
         ))}

@@ -7,7 +7,7 @@ import GoalBreakdown from './components/GoalBreakdown';
 import { Moon, Sun } from 'lucide-react';
 
 export default function App() {
-  const { habits, moods, addHabit, deleteHabit, toggleHabit, addMood } = useHabits();
+  const { habits, moods, addHabit, deleteHabit, toggleHabit, addMood, simulatedDate, advanceDay } = useHabits();
   const [darkMode, setDarkMode] = useState(false);
 
   // Initialize dark mode from system preference or local storage
@@ -35,20 +35,33 @@ export default function App() {
             </h1>
             <p className="text-zinc-500 dark:text-zinc-400 mt-1">Smart habit tracking & productivity coach.</p>
           </div>
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="p-3 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors text-zinc-600 dark:text-zinc-300"
-          >
-            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={advanceDay}
+              className="px-4 py-2 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 rounded-full font-medium hover:bg-indigo-200 dark:hover:bg-indigo-800/60 transition-colors text-sm flex items-center gap-2"
+            >
+              Next Day ⏩
+            </button>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-3 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors text-zinc-600 dark:text-zinc-300"
+            >
+              {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+          </div>
         </header>
 
-        <Dashboard habits={habits} moods={moods} addMood={addMood} />
+        <Dashboard habits={habits} moods={moods} addMood={addMood} simulatedDate={simulatedDate} />
         
         <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-3xl p-6 sm:p-8 border border-zinc-100 dark:border-zinc-800 shadow-inner">
-          <h2 className="text-xl font-semibold mb-6 text-zinc-900 dark:text-white">Your Habits</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">Your Habits</h2>
+            <span className="text-sm text-zinc-500 font-medium bg-zinc-200 dark:bg-zinc-800 px-3 py-1 rounded-full">
+              {simulatedDate.toLocaleDateString()}
+            </span>
+          </div>
           <HabitForm addHabit={addHabit} />
-          <HabitList habits={habits} toggleHabit={toggleHabit} deleteHabit={deleteHabit} />
+          <HabitList habits={habits} toggleHabit={toggleHabit} deleteHabit={deleteHabit} simulatedDate={simulatedDate} />
         </div>
 
         <GoalBreakdown addHabit={addHabit} />
